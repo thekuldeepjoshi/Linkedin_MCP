@@ -1,19 +1,22 @@
-# MCP Server for LinkedIn
+# LinkBridge MCP
 
-<!-- mcp-name: io.github.stickerdaniel/linkedin-mcp-server -->
 
 <p align="left">
-  <a href="https://pypi.org/project/mcp-server-linkedin/" target="_blank"><img src="https://img.shields.io/pypi/v/mcp-server-linkedin?color=blue" alt="PyPI"></a>
-  <a href="https://github.com/stickerdaniel/linkedin-mcp-server/actions/workflows/ci.yml" target="_blank"><img src="https://github.com/stickerdaniel/linkedin-mcp-server/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI Status"></a>
-  <a href="https://github.com/stickerdaniel/linkedin-mcp-server/actions/workflows/release.yml" target="_blank"><img src="https://github.com/stickerdaniel/linkedin-mcp-server/actions/workflows/release.yml/badge.svg?branch=main" alt="Release"></a>
+  <a href="https://pypi.org/project/linkbridge-mcp/" target="_blank"><img src="https://img.shields.io/pypi/v/linkbridge-mcp?color=blue" alt="PyPI"></a>
+  <a href="https://github.com/thekuldeepjoshi/Linkedin_MCP/actions/workflows/ci.yml" target="_blank"><img src="https://github.com/thekuldeepjoshi/Linkedin_MCP/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI Status"></a>
+  <a href="https://github.com/thekuldeepjoshi/Linkedin_MCP/actions/workflows/release.yml" target="_blank"><img src="https://github.com/thekuldeepjoshi/Linkedin_MCP/actions/workflows/release.yml/badge.svg?branch=main" alt="Release"></a>
   <a href="https://github.com/stickerdaniel/linkedin-mcp-server/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-Apache%202.0-%233fb950?labelColor=32383f" alt="License"></a>
 </p>
 
-Give your AI agents access to LinkedIn through your own browser session. Read profiles, research companies, find jobs, and manage conversations and connection requests.
+LinkBridge MCP is a community-maintained fork of the upstream LinkedIn MCP server. It gives AI agents access to LinkedIn through your own browser session. Read profiles, research companies, find jobs, and manage conversations and connection requests.
 
 > This is an independent open-source project, not affiliated with LinkedIn or Microsoft. LinkedIn is a trademark of LinkedIn Corporation, used here only to identify the service this software interacts with.
 
-<br/>
+
+## Deploy on Render
+
+This repository includes a `render.yaml` blueprint for a Docker-based web service. In Render, create a new Blueprint from this repository and deploy the `linkbridge-mcp` service. The service uses Streamable HTTP on Render’s assigned port and a persistent disk for the browser profile. Complete LinkedIn sign-in separately and keep the profile disk attached across deploys.
+
 <details open>
 <summary><strong>LinkedIn MCP Sponsor</strong></summary>
 <br/>
@@ -123,9 +126,9 @@ Use code <strong>FOUNDING20</strong> for 20% off your first year. <a href="https
 ```json
 {
   "mcpServers": {
-    "mcp-server-linkedin": {
+    "linkbridge-mcp": {
       "command": "uvx",
-      "args": ["mcp-server-linkedin@latest"],
+      "args": ["linkbridge-mcp@latest"],
       "env": { "UV_HTTP_TIMEOUT": "300" }
     }
   }
@@ -137,7 +140,7 @@ The `@latest` tag turns on automatic updates, which keep the server working with
 AI agent? Get a quick confirmation from the user before enabling automatic updates.
 
 > [!NOTE]
-> Early tool calls may return a setup/authentication-in-progress error until browser setup or login finishes. If you prefer to create a session explicitly, run `uvx mcp-server-linkedin@latest --login`.
+> Early tool calls may return a setup/authentication-in-progress error until browser setup or login finishes. If you prefer to create a session explicitly, run `uvx linkbridge-mcp@latest --login`.
 
 ### Setup Help
 
@@ -204,9 +207,9 @@ If you are already signed into LinkedIn in Chrome, Chromium, Brave, Edge, Arc, V
 
 ```bash
 # Auto-pick the most recently used browser with a live LinkedIn session
-uvx mcp-server-linkedin@latest --import-from-browser
+uvx linkbridge-mcp@latest --import-from-browser
 # Or target a specific browser
-uvx mcp-server-linkedin@latest --import-from-browser brave
+uvx linkbridge-mcp@latest --import-from-browser brave
 ```
 
 This reads the browser's LinkedIn cookies, validates them against your feed, and saves them to `~/.linkedin-mcp/profile/`, the same place `--login` writes to. Notes:
@@ -225,13 +228,13 @@ This reads the browser's LinkedIn cookies, validates them against your feed, and
 
 ```bash
 # Run with debug logging
-uvx mcp-server-linkedin@latest --log-level DEBUG
+uvx linkbridge-mcp@latest --log-level DEBUG
 ```
 
 **HTTP Mode Example (for web-based MCP clients):**
 
 ```bash
-uvx mcp-server-linkedin@latest --transport streamable-http --host 127.0.0.1 --port 8080 --path /mcp
+uvx linkbridge-mcp@latest --transport streamable-http --host 127.0.0.1 --port 8080 --path /mcp
 ```
 
 Runtime server logs are emitted by FastMCP/Uvicorn.
@@ -289,7 +292,7 @@ while a container is running.
 
 - Make sure you have only one active LinkedIn session at a time
 - LinkedIn may require a login confirmation in the LinkedIn mobile app for `--login`
-- LinkedIn may show a captcha challenge during login. Run `uvx mcp-server-linkedin@latest --login` which opens a browser where you can solve it manually.
+- LinkedIn may show a captcha challenge during login. Run `uvx linkbridge-mcp@latest --login` which opens a browser where you can solve it manually.
 
 </details>
 
@@ -361,7 +364,7 @@ On startup, the MCP Bundle prepares the shared Patchright Chromium browser cache
 
 - Make sure you have only one active LinkedIn session at a time
 - LinkedIn may require a login confirmation in the LinkedIn mobile app for `--login`
-- LinkedIn may show a captcha challenge during login. Run `uvx mcp-server-linkedin@latest --login` which opens a browser where you can solve captchas manually. See the [uvx setup](#setup-with-uvx-recommended) for prerequisites.
+- LinkedIn may show a captcha challenge during login. Run `uvx linkbridge-mcp@latest --login` which opens a browser where you can solve captchas manually. See the [uvx setup](#setup-with-uvx-recommended) for prerequisites.
 
 </details>
 
@@ -503,7 +506,7 @@ Keep the same host directory mounted at `/home/pwuser/.linkedin-mcp` on every la
 ```json
 {
   "mcpServers": {
-    "mcp-server-linkedin": {
+    "linkbridge-mcp": {
       "command": "docker",
       "args": [
         "run", "--rm", "-i",
@@ -525,7 +528,7 @@ username.
 ```json
 {
   "mcpServers": {
-    "mcp-server-linkedin": {
+    "linkbridge-mcp": {
       "command": "docker",
       "args": [
         "run", "--rm", "-i",
@@ -543,7 +546,7 @@ username.
 > `$env:USERPROFILE\.linkedin-mcp` before passing it to Docker.
 
 > [!NOTE]
-> Sessions expire over time. When tool calls start asking for authentication, repeat the login command above, or run `uvx mcp-server-linkedin@latest --login` on the host.
+> Sessions expire over time. When tool calls start asking for authentication, repeat the login command above, or run `uvx linkbridge-mcp@latest --login` on the host.
 
 ### Setup Help
 
@@ -692,7 +695,7 @@ belongs behind something that provides it.
 
 - Make sure you have only one active LinkedIn session at a time
 - LinkedIn may require a login confirmation in the LinkedIn mobile app for `--login`
-- LinkedIn may show a captcha challenge during login. Run `uvx mcp-server-linkedin@latest --login` which opens a browser where you can solve captchas manually. See the [uvx setup](#setup-with-uvx-recommended) for prerequisites.
+- LinkedIn may show a captcha challenge during login. Run `uvx linkbridge-mcp@latest --login` which opens a browser where you can solve captchas manually. See the [uvx setup](#setup-with-uvx-recommended) for prerequisites.
 - If Docker auth becomes stale after you re-login on the host, restart Docker once so it can fresh-bridge from the new source session generation.
 
 </details>
@@ -861,7 +864,7 @@ uv run -m linkedin_mcp_server --transport streamable-http --host 127.0.0.1 --por
 ```json
 {
   "mcpServers": {
-    "mcp-server-linkedin": {
+    "linkbridge-mcp": {
       "command": "uv",
       "args": ["--directory", "/path/to/linkedin-mcp-server", "run", "-m", "linkedin_mcp_server"]
     }
