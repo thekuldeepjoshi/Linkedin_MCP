@@ -1115,7 +1115,7 @@ wheels = [
 ]
 
 [[package]]
-name = "mcp-server-linkedin"
+name = "linkbridge-mcp"
 version = "4.29.0"
 source = { editable = "." }
 dependencies = [
