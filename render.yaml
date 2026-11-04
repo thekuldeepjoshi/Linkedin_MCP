@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: linkbridge-mcp
+    runtime: docker
+    plan: standard
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    dockerCommand: python -m linkedin_mcp_server --transport streamable-http --host 0.0.0.0 --port $PORT
+    disk:
+      name: linkbridge-profile
+      mountPath: /home/pwuser/.linkedin-mcp
+      sizeGB: 1
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
