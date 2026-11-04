@@ -1,5 +1,5 @@
 [project]
-name = "mcp-server-linkedin"
+name = "linkbridge-mcp"
 version = "4.29.0"
 description = "MCP server that gives AI assistants like Claude access to LinkedIn profiles, companies, and job postings through the user's own browser session."
 readme = "README.md"
@@ -57,14 +57,14 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/stickerdaniel/linkedin-mcp-server"
-Documentation = "https://github.com/stickerdaniel/linkedin-mcp-server#readme"
-Repository = "https://github.com/stickerdaniel/linkedin-mcp-server"
-Issues = "https://github.com/stickerdaniel/linkedin-mcp-server/issues"
-Changelog = "https://github.com/stickerdaniel/linkedin-mcp-server/releases"
+Homepage = "https://github.com/thekuldeepjoshi/Linkedin_MCP"
+Documentation = "https://github.com/thekuldeepjoshi/Linkedin_MCP#readme"
+Repository = "https://github.com/thekuldeepjoshi/Linkedin_MCP"
+Issues = "https://github.com/thekuldeepjoshi/Linkedin_MCP/issues"
+Changelog = "https://github.com/thekuldeepjoshi/Linkedin_MCP/releases"
 
 [project.scripts]
-mcp-server-linkedin = "linkedin_mcp_server.cli_main:main"
+linkbridge-mcp = "linkedin_mcp_server.cli_main:main"
 
 [build-system]
 requires = ["setuptools>=77.0.3"]
