@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+import os
 import sys
 from collections.abc import Generator, Sequence
 from contextlib import contextmanager
