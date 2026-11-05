@@ -881,15 +881,6 @@ def main(argv: Sequence[str] | None = None) -> None:
         try:
             transport = config.server.transport
             auth_token = os.environ.get("MCP_AUTH_TOKEN", "").strip() or None
-            if (
-                transport == "streamable-http"
-                and config.server.host not in {"127.0.0.1", "localhost", "::1"}
-                and auth_token is None
-            ):
-                raise ConfigurationError(
-                    "MCP_AUTH_TOKEN is required when Streamable HTTP is exposed on a non-loopback host"
-                )
-
             # Prompt for transport in interactive mode if not explicitly set
             if config.is_interactive and not config.server.transport_explicitly_set:
                 print("\n🚀 Server ready! Choose transport mode:")
@@ -910,6 +901,15 @@ def main(argv: Sequence[str] | None = None) -> None:
                     # fails here and nowhere else, and it deserves the same
                     # answer as one caught at startup.
                     _exit_on_a_bad_setting(e)
+
+            if (
+                transport == "streamable-http"
+                and config.server.host not in {"127.0.0.1", "localhost", "::1"}
+                and auth_token is None
+            ):
+                raise ConfigurationError(
+                    "MCP_AUTH_TOKEN is required when Streamable HTTP is exposed on a non-loopback host"
+                )
 
             # Get a shared owner running before building this process's server.
             # It has to come first now: whether this process drives a browser or
