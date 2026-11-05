@@ -1025,13 +1025,7 @@ uv run -m linkedin_mcp_server --transport streamable-http --host 127.0.0.1 --por
 > **What if my agents execute too many actions?**
 > Tool calls run sequentially through a queue. You are responsible for the volume of automation you run; use it sparingly and prompt your agents responsibly.
 
-## Contributors
 
-Thanks to everyone who has contributed code, bug reports and fixes.
-
-<a href="https://github.com/stickerdaniel/linkedin-mcp-server/graphs/contributors">
-  <img alt="Contributors to linkedin-mcp-server" src="https://contrib.rocks/image?repo=stickerdaniel/linkedin-mcp-server" />
-</a>
 
 ## Acknowledgements
 
