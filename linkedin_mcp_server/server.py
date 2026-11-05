@@ -236,7 +236,7 @@ def create_mcp_server(
     set_process_role(role)
 
     mcp = FastMCP(
-        "mcp-server-linkedin",
+        "LinkBridge MCP",
         version=__version__,
         # Before any role wiring, and not only on a role that drives a browser.
         # A proxy registers no local tools, but it is the server the client
