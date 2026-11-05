@@ -18,6 +18,8 @@ from fastmcp import FastMCP
 # an override narrows what every caller downstream was promised.
 from fastmcp.server.auth.auth import AccessToken, TokenVerifier
 from fastmcp.server.lifespan import lifespan
+from starlette.requests import Request
+from starlette.responses import JSONResponse
 
 from linkedin_mcp_server import __version__
 from linkedin_mcp_server.bootstrap import (
@@ -247,6 +249,18 @@ def create_mcp_server(
         mask_error_details=True,
         auth=_StaticTokenAuth(auth_token) if auth_token is not None else None,
     )
+
+    @mcp.custom_route("/", methods=["GET"])
+    async def root(_request: Request) -> JSONResponse:
+        """Expose a simple service status page at the public root URL."""
+        return JSONResponse(
+            {
+                "name": "LinkBridge MCP",
+                "status": "ok",
+                "version": __version__,
+                "mcp_endpoint": "/mcp",
+            }
+        )
     # First, so it is the outermost layer on every role: everything inside it
     # still sees a failure as the exception it raised.
     mcp.add_middleware(ErrorCodeMiddleware())
