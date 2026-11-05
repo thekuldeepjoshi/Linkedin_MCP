@@ -880,6 +880,15 @@ def main(argv: Sequence[str] | None = None) -> None:
         # Phase 1: Server Runtime
         try:
             transport = config.server.transport
+            auth_token = os.environ.get("MCP_AUTH_TOKEN", "").strip() or None
+            if (
+                transport == "streamable-http"
+                and config.server.host not in {"127.0.0.1", "localhost", "::1"}
+                and auth_token is None
+            ):
+                raise ConfigurationError(
+                    "MCP_AUTH_TOKEN is required when Streamable HTTP is exposed on a non-loopback host"
+                )
 
             # Prompt for transport in interactive mode if not explicitly set
             if config.is_interactive and not config.server.transport_explicitly_set:
@@ -917,17 +926,22 @@ def main(argv: Sequence[str] | None = None) -> None:
             from linkedin_mcp_server.daemon.discovery import Unanswered
 
             if shared is None:
-                mcp = create_mcp_server(tool_timeout=config.server.tool_timeout_seconds)
+                mcp = create_mcp_server(
+                    tool_timeout=config.server.tool_timeout_seconds,
+                    auth_token=auth_token,
+                )
             elif isinstance(shared, Unanswered):
                 mcp = create_mcp_server(
                     tool_timeout=config.server.tool_timeout_seconds,
                     silent_owner=shared,
+                    auth_token=auth_token,
                 )
             else:
                 mcp = create_mcp_server(
                     tool_timeout=config.server.tool_timeout_seconds,
                     role=ServerRole.PROXY,
                     proxy_backend=shared,
+                    auth_token=auth_token,
                 )
 
             if transport == "streamable-http":
