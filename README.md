@@ -15,7 +15,74 @@ LinkBridge MCP is a community-maintained fork of the upstream LinkedIn MCP serve
 
 ## Deploy on Render
 
-This repository includes a `render.yaml` blueprint for a Docker-based web service. In Render, create a new Blueprint from this repository and deploy the `linkbridge-mcp` service. The service uses Streamable HTTP on Render’s assigned port and a persistent disk for the browser profile. Complete LinkedIn sign-in separately and keep the profile disk attached across deploys.
+This repository includes a `render.yaml` Blueprint for a Docker web service. Create a Blueprint from this repository and deploy the `linkbridge-mcp` service. It uses Streamable HTTP and a persistent disk at `/home/pwuser/.linkedin-mcp`.
+
+### 1. Protect the public MCP endpoint
+
+The service requires a bearer token when HTTP is exposed publicly.
+
+Generate a strong token locally:
+
+```bash
+openssl rand -hex 32
+```
+
+In Render, open the service's **Environment** settings and add:
+
+- `MCP_AUTH_TOKEN`: the generated value, marked secret
+- `TRANSPORT`: `streamable-http`
+- `HOST`: `0.0.0.0`
+
+Do not publish or commit the token.
+
+### 2. Sign in to LinkedIn on the Render browser
+
+The login browser runs inside the container. Temporarily route Render's public port to its token-protected noVNC viewer:
+
+1. In **Settings**, set **Docker Command** to:
+
+   ```bash
+   /bin/bash -c 'python -m linkedin_mcp_server --login --login-viewer; sleep infinity'
+   ```
+
+2. In **Environment**, temporarily set `PORT=6080`.
+3. Deploy the latest commit.
+4. In the Render logs, find the line beginning `Open this loopback URL to control the login browser:`. Copy its token and open the same path on your public Render hostname using HTTPS, for example:
+
+   ```
+   https://YOUR-SERVICE.onrender.com/login.html#token=YOUR_TOKEN
+   ```
+
+5. Complete LinkedIn sign-in. Keep the Render log and viewer URL private. The viewer is token-protected and is only needed during this login step.
+
+After the login browser closes, restore the normal MCP service:
+
+1. Clear **Docker Command** so the Dockerfile's default entrypoint is used.
+2. Remove the temporary `PORT` override so Render uses its default port, `10000`.
+3. Keep `MCP_AUTH_TOKEN`, `TRANSPORT`, and `HOST` set as above.
+4. Deploy again.
+
+The persistent disk keeps the LinkedIn profile across this restart. Do not remove or replace that disk.
+
+### 3. Connect your MCP client
+
+Use this Streamable HTTP endpoint:
+
+```
+https://YOUR-SERVICE.onrender.com/mcp
+```
+
+Configure your MCP client with that URL and an HTTP header:
+
+```
+Authorization: Bearer YOUR_MCP_AUTH_TOKEN
+```
+
+Client configuration varies. The token must be sent on every MCP request. Do not paste the token into public prompts, source control, or screenshots.
+
+### 4. Verify the connection
+
+First call `get_session_status`. Then test a read-only tool such as `get_my_profile` or `search_people`. The root URL is only a health response; MCP requests must go to `/mcp` and be initialized by the MCP client. A direct browser visit to `/mcp` is not a valid connection test.
 
 <details open>
 <summary><strong>LinkedIn MCP Sponsor</strong></summary>
