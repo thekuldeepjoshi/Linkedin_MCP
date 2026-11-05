@@ -45,7 +45,7 @@ assert _SPEC is not None and _SPEC.loader is not None
 pilot = importlib.util.module_from_spec(_SPEC)
 _SPEC.loader.exec_module(pilot)
 
-_VERSION = importlib.metadata.version("mcp-server-linkedin")
+_VERSION = importlib.metadata.version("linkbridge-mcp")
 _FORWARD = SimpleNamespace(
     worth_connecting=True, attachment_lookup=SimpleNamespace(attachment=object())
 )
