@@ -32,7 +32,7 @@ from linkedin_mcp_server.greenlet_runtime import explain_a_missing_runtime
 explain_a_missing_runtime()
 
 try:
-    __version__ = version("mcp-server-linkedin")
+    __version__ = version("linkbridge-mcp")
 except PackageNotFoundError:
     try:
         # Fallback for environments installed under the pre-rename name
