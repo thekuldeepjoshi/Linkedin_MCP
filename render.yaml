@@ -6,7 +6,6 @@ services:
     region: frankfurt
     dockerfilePath: ./Dockerfile
     dockerContext: .
-    dockerCommand: python -m linkedin_mcp_server --transport streamable-http --host 0.0.0.0 --port $PORT
     disk:
       name: linkbridge-profile
       mountPath: /home/pwuser/.linkedin-mcp
@@ -14,3 +13,7 @@ services:
     envVars:
       - key: PYTHONUNBUFFERED
         value: "1"
+      - key: TRANSPORT
+        value: streamable-http
+      - key: HOST
+        value: 0.0.0.0
