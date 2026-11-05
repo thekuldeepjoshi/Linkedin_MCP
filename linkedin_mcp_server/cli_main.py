@@ -968,6 +968,7 @@ def main(argv: Sequence[str] | None = None) -> None:
                     port=config.server.port,
                     path=config.server.path,
                     host_origin_protection=True,
+                    allowed_hosts=["linkedin-mcp-ps43.onrender.com"],
                 )
             else:
                 mcp.run(transport=transport)
