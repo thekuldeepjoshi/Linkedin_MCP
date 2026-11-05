@@ -749,6 +749,7 @@ def get_version() -> str:
         from importlib.metadata import PackageNotFoundError, version
 
         for package_name in (
+            "linkbridge-mcp",
             "mcp-server-linkedin",
             "linkedin-scraper-mcp",
             "linkedin-mcp-server",
