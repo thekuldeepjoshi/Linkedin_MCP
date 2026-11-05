@@ -37,7 +37,14 @@ def read_authenticated_status(
     parse: Callable[[bytes], _Status | None],
     max_diagnostic_bytes: int | None = None,
 ) -> tuple[bytes, _Status] | None:
-    """Find and parse one marker-prefixed status frame in startup output."""
+    """Find and parse one marker-prefixed status frame in startup output.
+
+    Interpreter startup hooks run before the target module can claim its control
+    stream. Their output may omit a trailing newline, so the real frame can begin
+    in the middle of a line. Only *marker*, which contains a nonce delivered after
+    process creation, starts a candidate. Bytes that cannot begin that marker are
+    discarded while a short suffix is retained across reads.
+    """
     if not marker or len(marker) >= _MAX_FRAME_BYTES:
         raise ValueError("The authenticated status marker has an invalid length")
 
@@ -58,7 +65,7 @@ def read_authenticated_status(
                 del buffered[:start]
                 discarded += start
 
-            newline = buffered.find(b"\\n", len(marker))
+            newline = buffered.find(b"\n", len(marker))
             if newline < 0:
                 if len(buffered) <= _MAX_FRAME_BYTES:
                     break
