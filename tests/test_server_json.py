@@ -49,9 +49,6 @@ from packaging.version import Version
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 _SERVER_JSON = _REPO_ROOT / ".github" / "mcp" / "server.json"
 _README = _REPO_ROOT / "README.md"
-_RELEASE_WORKFLOW = (_REPO_ROOT / ".github" / "workflows" / "release.yml").read_text(
-    encoding="utf-8"
-)
 _DOCKERFILE = _REPO_ROOT / "Dockerfile"
 
 # The GitHub namespace the registry grants after a GitHub login. It is derived
